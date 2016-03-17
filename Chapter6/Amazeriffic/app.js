@@ -32,7 +32,7 @@ app.use(express.static(__dirname + "/client"));
 
 // app.use(express.urlencoded()); no longer supported.
 bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 http.createServer(app).listen(3000);
 

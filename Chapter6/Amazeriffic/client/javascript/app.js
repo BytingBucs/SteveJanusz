@@ -130,13 +130,17 @@ var organizeByTag = function(toDoObjects) {
 	var tagObjects = tags.map(function(tag) {
 		var toDosWithTag = [];
 		toDoObjects.forEach(function(toDo) {
-			if(toDo.tags.indexOf(tag !== -1)) {
+			console.log(toDo.tags);
+			console.log(toDo.tags.indexOf(tag));
+			console.log("-----");
+			if(toDo.tags.indexOf(tag) !== -1) {
 				toDosWithTag.push(toDo.description);
 			}
 		});
 		
 		return {"name": tag, "toDos": toDosWithTag};
 	});
+
 	return tagObjects;
 };
 
