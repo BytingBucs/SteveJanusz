@@ -44,6 +44,18 @@ header nav {
 main {
 	background: white;
 }
+main .container {
+	padding: 15px;
+	background-color: #ebebeb;
+}
+main .tabs {
+	margin-left: 15px;
+}
+
+main .container div div {
+	border: 2px solid black;
+	margin: 5px;
+}
 .tabs a span {
 	display: inline-block;
 	border-radius: 5px 5px 0 0;

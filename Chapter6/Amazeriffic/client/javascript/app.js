@@ -59,6 +59,7 @@ var main = function(toDoObjects) {
 				console.log(organizedByTag);
 				
 				organizedByTag.forEach(function(tag) {
+					var $holder = $("<div>");
 					var $tagName = $("<h3>").text(tag.name);
 					var $content = $("<ul>");
 						
@@ -67,8 +68,13 @@ var main = function(toDoObjects) {
 						$content.append($li);
 					});
 					
-					$("main .content").append($tagName);
-					$("main .content").append($content);
+					$holder.append($tagName);
+					$holder.append($content);
+
+					$("main .content").append($holder);
+
+					// $("main .content").append($tagName);
+					// $("main .content").append($content);
 				});
 				
 			} else if($element.parent().is(":nth-child(4)")) {
