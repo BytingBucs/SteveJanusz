@@ -58,6 +58,8 @@ var main = function(toDoObjects) {
 				var organizedByTag = organizeByTag(toDoObjects);
 				console.log(organizedByTag);
 				
+				$container = $("<div>");
+				
 				organizedByTag.forEach(function(tag) {
 					var $holder = $("<div>");
 					var $tagName = $("<h3>").text(tag.name);
