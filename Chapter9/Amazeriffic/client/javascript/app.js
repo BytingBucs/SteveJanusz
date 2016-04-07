@@ -1,62 +1,54 @@
 var main = function(toDoObjects) {
 	"use strict";
 	
-	var toDos = toDoObjects.map(function(toDo) {
+	var toDos,
+		tabs;
+	
+	toDos = toDoObjects.map(function(toDo) {
 		return toDo.description;
 	});
 	
-	var addItemToList = function() {
-		var $description = $("main .content .description").val();
-		var $tags = $("main .content .tags").val().split(",");
-		var newToDo = {"description": $description, "tags": $tags}
-
-		if($description != "" && $tags != "") {
-
-			$.post("todos", newToDo, function(response) {
-				console.log(response);
-
-				toDoObjects.push(newToDo);
+	//START OF THE TABS SECTION
+	tabs = [];
 	
-				toDos = toDoObjects.map(function(toDo) {
-					return toDo.description;
-				});
-			});		
-			
-			$("main .content .description").val("");
-			$("main .content .tags").val("");
-		}
-	};
-	
-	$(".tabs a span").toArray().forEach(function(element) {
-		var $element = $(element);
-		$element.on("click", function() {
-			$(".tabs a span").removeClass("active");
-			$(element).addClass("active");
-			$("main .content").empty();
-			
-			if($element.parent().is(":nth-child(1)")) {
-				
+	//Newest Tab
+	tabs.push({
+		"name": 	"Newest",
+		"content":	function(callback) {
+			$.get("todos.json", function(toDoObjects) {
 				var $content = $("<ul>");
-				
 				//Slice is needed so we do not modify the original array.
 				toDos.slice().reverse().forEach(function(todo) {
 					$content.append($("<li>").text(todo));
 				});
-				$("main .content").append($content);
-				
-			} else if($element.parent().is(":nth-child(2)")) {
-				
+				callback($content);
+			});
+		}
+	});
+	
+	//Oldest Tab
+	tabs.push({
+		"name": 	"Oldest",
+		"content":	function(callback) {
+			$.get("todos.json", function(toDoObjects) {
 				var $content = $("<ul>");
 				toDos.forEach(function(todo) {
 					$content.append($("<li>").text(todo));
 				});
-				$("main .content").append($content);
-			
-			} else if($element.parent().is(":nth-child(3)")) {
-				console.log("The tags tab was clicked.")
-				
+				callback($content);
+			});
+		}
+	});
+	
+	//Tags Tab
+	tabs.push({
+		"name": 	"Tags",
+		"content":	function(callback) {
+			$.get("todos.json", function(toDoObjects) {
 				var organizedByTag = organizeByTag(toDoObjects);
-				console.log(organizedByTag);
+				//console.log(organizedByTag);
+				
+				var $elements = [];
 				
 				organizedByTag.forEach(function(tag) {
 					var $holder = $("<div>");
@@ -71,14 +63,18 @@ var main = function(toDoObjects) {
 					$holder.append($tagName);
 					$holder.append($content);
 
-					$("main .content").append($holder);
-
-					// $("main .content").append($tagName);
-					// $("main .content").append($content);
+					$elements.push($holder);
 				});
-				
-			} else if($element.parent().is(":nth-child(4)")) {
-
+				callback($elements);
+			});
+		}
+	});
+	
+	//Add Tab
+	tabs.push({
+		"name": 	"Add",
+		"content":	function(callback) {
+			$.get("todos.json", function(toDoObjects) {
 				var $content = $("<div>");
 				
 				var $inputLabel = $("<span>").text("Description: ");
@@ -111,8 +107,71 @@ var main = function(toDoObjects) {
 				$content.append($("<br>"));
 				
 				$content.append($button);
-				$("main .content").append($content);
+				callback($content);
+			});
+		}
+	});
+	
+	//Add the tabs to the page
+	tabs.forEach(function(tab) {
+		var $aElement = $("<a>").attr("href", "#"),
+			$spanElement = $("<span>").text(tab.name);
 			
+		$aElement.append($spanElement);
+		
+		$spanElement.on("click", function() {
+			var $content;
+			
+			$(".tabs a span").removeClass("active");
+			$spanElement.addClass("active");
+			$("main .container").empty();
+			
+			//get the content from the tab's content function
+			tab.content(function($content) {
+				$("main .container").append($content);
+			});
+
+			return false;
+		});
+		$("main .tabs").append($aElement);
+	});
+	
+	//END OF THE TABS SECTION
+	
+	var addItemToList = function() {
+		//Do the calls to the values need to be more specific?
+		
+		var $description = $("main .description").val();
+		var $tags = $("main .tags").val().split(",");
+		var newToDo = {"description": $description, "tags": $tags}
+
+		if($description != "" && $tags != "") {
+
+			$.post("todos", newToDo, function(response) {
+				console.log(response);
+
+				toDoObjects.push(newToDo);
+	
+				toDos = toDoObjects.map(function(toDo) {
+					return toDo.description;
+				});
+			});		
+			
+			$("main .description").val("");
+			$("main .tags").val("");
+		}
+	};
+	
+	$(".tabs a span").toArray().forEach(function(element) {
+		var $element = $(element);
+		$element.on("click", function() {
+			$(".tabs a span").removeClass("active");
+			$(element).addClass("active");
+			$("main .content").empty();
+			
+			if($element.parent().is(":nth-child(2)")) {
+			} else if($element.parent().is(":nth-child(3)")) {				
+			} else if($element.parent().is(":nth-child(4)")) {			
 			}
 			
 			return false;
@@ -136,9 +195,9 @@ var organizeByTag = function(toDoObjects) {
 	var tagObjects = tags.map(function(tag) {
 		var toDosWithTag = [];
 		toDoObjects.forEach(function(toDo) {
-			console.log(toDo.tags);
-			console.log(toDo.tags.indexOf(tag));
-			console.log("-----");
+			//console.log(toDo.tags);
+			//console.log(toDo.tags.indexOf(tag));
+			//console.log("-----");
 			if(toDo.tags.indexOf(tag) !== -1) {
 				toDosWithTag.push(toDo.description);
 			}
