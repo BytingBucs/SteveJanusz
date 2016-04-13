@@ -1,7 +1,8 @@
 var	express = require("express"),
 	http = require("http"),
 	app = express(),
-	ToDo = require("./models/todo.js"),
+	mongoose = require("mongoose"),
+	ToDosController = require("./controllers/todos_controller.js"),
 	bodyParser = require("body-parser");
 
 app.use(express.static(__dirname + "/client"));
@@ -40,8 +41,5 @@ app.post("/todos", function(req, res) {
 });
 
 // Takes the place of todos.json
-app.get("/todos.json", function(req, res) {
-	ToDo.find({}, function(err, toDos) {
-		res.json(toDos);
-	});
-});
+app.get("/todos.json", ToDosController.index);
+app.post("/todos", ToDosController.create);
