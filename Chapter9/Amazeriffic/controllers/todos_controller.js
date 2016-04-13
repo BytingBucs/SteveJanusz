@@ -25,17 +25,16 @@ ToDosController.create = function(req, res) {
 ToDosController.show = function(req, res) {
 	// Show ID specified in URL
 	var id = req.params.id;
-	console.log(id);
 	
 	// Find specified item.
 	ToDo.find({"_id": id}, function(err, todo) {
 		if(err !== null) {
-			res.json(err);
+			res.json(500, err);
 		} else {
 			if(todo.length > 0) {
-				res.json(todo[0]);
+				res.json(200, todo[0]);
 			} else {
-				res.send("Not Found");
+				res.send(404);
 			}
 		}
 	});
