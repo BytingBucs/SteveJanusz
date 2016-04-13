@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
 // Mongoose model for users
-var UserShema = mongoose.Schema({
+var UserSchema = mongoose.Schema({
 	username: String,
 });
 

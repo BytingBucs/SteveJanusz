@@ -29,7 +29,19 @@ UsersController.index = function(req, res) {
 // Show a user
 UsersController.show = function(req, res) {
 	console.log("Show action called");
-	res.send(200);
+	
+	User.find({"username": req.params.username}, function(err, result) {
+		if(err) {
+			console.log(err);
+			res.send(500, err);
+		} else if(result.length !== 0) {
+			//User found.
+			res.sendfile("./client/index.html");
+		} else {
+			//User not found.
+			res.send(404);
+		}
+	});
 };
 
 UsersController.create = function(req, res) {
@@ -47,4 +59,4 @@ UsersController.destroy = function(req, res) {
 	res.send(200);
 };
 
-modules.exports = UsersController;
+module.exports = UsersController;

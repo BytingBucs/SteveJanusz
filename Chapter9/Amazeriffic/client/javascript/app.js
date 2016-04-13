@@ -231,5 +231,8 @@ var organizeByTag = function(toDoObjects) {
 $(document).ready(function() {
 	$.getJSON("todos.json", function(toDoObjects) {
 		main(toDoObjects);
-	});
+	}).fail(function(jqXHR, textStatus, error) {
+		//ToDo list was empty.
+		main([]);
+	});;
 });

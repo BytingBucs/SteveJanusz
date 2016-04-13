@@ -13,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 http.createServer(app).listen(3000);
 
+/*
 app.post("/todos", function(req, res) {
 	console.log(req.body);
 	var newToDo = new ToDo({	"description":	req.body.description,
@@ -40,6 +41,7 @@ app.post("/todos", function(req, res) {
 	// Send response.
 	// res.json({"message": "Server response to post."});
 });
+*/
 
 // routes
 app.get("/todos.json", ToDosController.index);
@@ -50,7 +52,13 @@ app.post("/todos", ToDosController.create);
 
 // user routes
 app.get("/users.json", usersController.index);
-app.get("/users", usersController.create);
+app.post("/users", usersController.create);
 app.get("/users/:username", usersController.show);
 app.put("/users/:username", usersController.update);
 app.del("/users/:username", usersController.destroy);
+
+// :username/todos routes
+app.get("/users/:username/todos.json", ToDosController.index);
+app.post("/users/:username/todos", ToDosController.create);
+// app.put("/users/:username/todos/:id", ToDosController.update);
+// app.del("/users/:username/todos/:id", ToDosController.destroy);
