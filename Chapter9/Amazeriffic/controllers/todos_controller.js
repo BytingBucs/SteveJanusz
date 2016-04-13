@@ -1,4 +1,5 @@
 var 	ToDo = require("../models/todo.js"),
+		User = require("../models/user.js"),
 		ToDosController = {};
 		
 ToDosController.index = function(req, res) {
@@ -39,9 +40,9 @@ ToDosController.create = function(req, res) {
 	var newToDo = new ToDo({	"description": 	req.body.description,
 								"tags":			req.body.tags});
 	
-	ToDo.find({"username": username}, function(err, result) {
+	User.find({"username": username}, function(err, result) {
 		if(err) {
-			res.resnd(500);
+			res.send(500);
 		} else {
 			if(result.length === 0) {
 				//User not found -- userless todo
@@ -50,10 +51,14 @@ ToDosController.create = function(req, res) {
 				//User found
 				newToDo.owner = result[0]._id;
 			}
+			
+			console.log(newToDo.owner);
+			
 			newToDo.save(function(err, result) {
 				if(err !== null) {
 					// ToDo not saved.
-					res.json(500, err);
+					res.json(200, err);
+					//res.json(500, err);
 				} else {
 					res.json(200, result);
 				}

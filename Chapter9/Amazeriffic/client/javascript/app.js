@@ -84,45 +84,40 @@ var main = function(toDoObjects) {
 	tabs.push({
 		"name": 	"Add",
 		"content":	function(callback) {
-			$.get("todos.json", function(toDoObjects) {
-				var $content = $("<div>");
-				
-				var $inputLabel = $("<span>").text("Description: ");
-				var $input = $("<input>").addClass("description");
-				$input.on("keypress", function(event) {
-					if(event.keyCode === 13) {
-						addItemToList();
-					}
-				});
-				
-				var $tagLabel = $("<span>").text("Tags: ");
-				var $tagInput = $("<input>").addClass("tags");
-				$input.on("keypress", function(event) {
-					if(event.keyCode === 13) {
-						addItemToList();
-					}
-				});
-				
-				var $button = $("<button>").text("Add");
-				$button.on("click", function() {
+			var $content = $("<div>");
+			
+			var $inputLabel = $("<span>").text("Description: ");
+			var $input = $("<input>").addClass("description");
+			$input.on("keypress", function(event) {
+				if(event.keyCode === 13) {
 					addItemToList();
-				});
-				
-				$content.append($inputLabel);
-				$content.append($input);
-				$content.append($("<br>"));
-				
-				$content.append($tagLabel);
-				$content.append($tagInput);
-				$content.append($("<br>"));
-				
-				$content.append($button);
-				callback(null, $content);
-				
-			}).fail(function(jqXHR, textStatus, error) {
-				//Send error and null to callback.
-				callback(error, null);
+				}
 			});
+			
+			var $tagLabel = $("<span>").text("Tags: ");
+			var $tagInput = $("<input>").addClass("tags");
+			$input.on("keypress", function(event) {
+				if(event.keyCode === 13) {
+					addItemToList();
+				}
+			});
+			
+			var $button = $("<button>").text("Add");
+			$button.on("click", function() {
+				addItemToList();
+			});
+			
+			$content.append($inputLabel);
+			$content.append($input);
+			$content.append($("<br>"));
+			
+			$content.append($tagLabel);
+			$content.append($tagInput);
+			$content.append($("<br>"));
+			
+			$content.append($button);
+			callback(null, $content);
+			
 		}
 	});
 	
