@@ -40,6 +40,9 @@ app.post("/todos", function(req, res) {
 	// res.json({"message": "Server response to post."});
 });
 
-// Takes the place of todos.json
+// routes
 app.get("/todos.json", ToDosController.index);
+
+// basic CRUD routes
+app.get("/todos/:id", ToDosController.show);
 app.post("/todos", ToDosController.create);
