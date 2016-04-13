@@ -3,6 +3,24 @@ var	User		= require("../models/user.js"),
 	
 var UsersController = {};
 
+// This checks to see if a User already exists
+User.find({}, function (err, result) {
+	if (err !== null) {
+		console.log("SOMETHING WENT HORRIBLY WRONG");
+		console.log(err);
+	} else if (result.length === 0) {
+		console.log("Creating Example User...");
+		var exampleUser = new User({"username":"semmy"});
+		exampleUser.save(function (err, result) {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log("Saved Example User");
+			}
+		});
+	}
+});
+
 UsersController.index = function(req, res) {
 	console.log("index action called");
 	res.send(200);
@@ -24,7 +42,7 @@ UsersController.update = function(req, res) {
 	res.send(200);
 };
 
-UsersController.delete = function(req, res) {
+UsersController.destroy = function(req, res) {
 	console.log("Delete action called");
 	res.send(200);
 };

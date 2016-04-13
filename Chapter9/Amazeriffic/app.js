@@ -3,6 +3,7 @@ var	express = require("express"),
 	app = express(),
 	mongoose = require("mongoose"),
 	ToDosController = require("./controllers/todos_controller.js"),
+	usersController = require("./controllers/users_controller.js"),
 	bodyParser = require("body-parser");
 
 app.use(express.static(__dirname + "/client"));
@@ -46,3 +47,10 @@ app.get("/todos.json", ToDosController.index);
 // basic CRUD routes
 app.get("/todos/:id", ToDosController.show);
 app.post("/todos", ToDosController.create);
+
+// user routes
+app.get("/users.json", usersController.index);
+app.get("/users", usersController.create);
+app.get("/users/:username", usersController.show);
+app.put("/users/:username", usersController.update);
+app.del("/users/:username", usersController.destroy);
