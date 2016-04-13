@@ -1,7 +1,7 @@
 var	express = require("express"),
 	http = require("http"),
-	mongoose = require("mongoose"),
 	app = express(),
+	ToDo = require("./models/todo.js"),
 	bodyParser = require("body-parser");
 
 app.use(express.static(__dirname + "/client"));
@@ -9,18 +9,7 @@ app.use(express.static(__dirname + "/client"));
 // app.use(express.urlencoded()); no longer supported.
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//connect to amazeriffic mongodb store
-mongoose.connect("mongodb://localhost/amazerrific");
-
-var ToDoSchema = mongoose.Schema({
-	description: String,
-	tags: [ String ]
-});
-
-var ToDo = mongoose.model("ToDo", ToDoSchema);
-
 http.createServer(app).listen(3000);
-
 
 app.post("/todos", function(req, res) {
 	console.log(req.body);

@@ -21,7 +21,10 @@ var main = function(toDoObjects) {
 				toDos.slice().reverse().forEach(function(todo) {
 					$content.append($("<li>").text(todo));
 				});
-				callback($content);
+				callback(null, $content);
+			}).fail(function(jqXHR, textStatus, error) {
+				//Send error and null to callback.
+				callback(error, null);
 			});
 		}
 	});
@@ -35,7 +38,10 @@ var main = function(toDoObjects) {
 				toDos.forEach(function(todo) {
 					$content.append($("<li>").text(todo));
 				});
-				callback($content);
+				callback(null, $content);
+			}).fail(function(jqXHR, textStatus, error) {
+				//Send error and null to callback.
+				callback(error, null);
 			});
 		}
 	});
@@ -65,7 +71,11 @@ var main = function(toDoObjects) {
 
 					$elements.push($holder);
 				});
-				callback($elements);
+				callback(null, $elements);
+				
+			}).fail(function(jqXHR, textStatus, error) {
+				//Send error and null to callback.
+				callback(error, null);
 			});
 		}
 	});
@@ -107,7 +117,11 @@ var main = function(toDoObjects) {
 				$content.append($("<br>"));
 				
 				$content.append($button);
-				callback($content);
+				callback(null, $content);
+				
+			}).fail(function(jqXHR, textStatus, error) {
+				//Send error and null to callback.
+				callback(error, null);
 			});
 		}
 	});
@@ -127,8 +141,13 @@ var main = function(toDoObjects) {
 			$("main .container").empty();
 			
 			//get the content from the tab's content function
-			tab.content(function($content) {
-				$("main .container").append($content);
+			tab.content(function(err, $content) {
+				if(err !== null) {
+					console.log("An error occured with your request");
+					console.log(err);
+				} else {
+					$("main .container").append($content);
+				}
 			});
 
 			return false;
