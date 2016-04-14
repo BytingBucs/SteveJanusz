@@ -6,42 +6,13 @@ var	express = require("express"),
 	usersController = require("./controllers/users_controller.js"),
 	bodyParser = require("body-parser");
 
+app.set("strict routing", false);
 app.use(express.static(__dirname + "/client"));
 
 // app.use(express.urlencoded()); no longer supported.
 app.use(bodyParser.urlencoded({ extended: true }));
 
 http.createServer(app).listen(3000);
-
-/*
-app.post("/todos", function(req, res) {
-	console.log(req.body);
-	var newToDo = new ToDo({	"description":	req.body.description,
-								"tags":			req.body.tags});
-
-	newToDo.save(function(err, result) {
-
-		if(err !== null) {
-			console.log(err);
-			res.send("ERROR");
-		} else {
-			// expects ALL items to be returned
-			ToDo.find({}, function(err, result) {
-				if(err !== null) {
-					// element did not get saved
-				}
-				res.json(result);
-			});
-		}
-	});
-
-
-	// toDos.push(newToDo);
-
-	// Send response.
-	// res.json({"message": "Server response to post."});
-});
-*/
 
 // routes
 app.get("/todos.json", ToDosController.index);
@@ -61,4 +32,4 @@ app.del("/users/:username", usersController.destroy);
 app.get("/users/:username/todos.json", ToDosController.index);
 app.post("/users/:username/todos", ToDosController.create);
 // app.put("/users/:username/todos/:id", ToDosController.update);
-// app.del("/users/:username/todos/:id", ToDosController.destroy);
+app.del("/users/:username/todos/:id", ToDosController.destroy);

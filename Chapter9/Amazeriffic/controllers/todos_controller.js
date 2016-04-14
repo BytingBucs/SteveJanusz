@@ -85,4 +85,8 @@ ToDosController.show = function(req, res) {
 	});
 };
 
+ToDosController.destroy = function(req, res) {
+	console.log("Destroy");
+}
+
 module.exports = ToDosController;

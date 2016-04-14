@@ -29,6 +29,7 @@ UsersController.index = function(req, res) {
 // Show a user
 UsersController.show = function(req, res) {
 	console.log("Show action called");
+	console.log(req.params.username);
 	
 	User.find({"username": req.params.username}, function(err, result) {
 		if(err) {

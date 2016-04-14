@@ -18,8 +18,29 @@ var main = function(toDoObjects) {
 			$.get("todos.json", function(toDoObjects) {
 				var $content = $("<ul>");
 				//Slice is needed so we do not modify the original array.
-				toDos.slice().reverse().forEach(function(todo) {
-					$content.append($("<li>").text(todo));
+				toDoObjects.slice().reverse().forEach(function(todo) {
+					var $todoListItem = $("<li>").text(todo.description);
+					var $todoRemoveLink = $("<a>").attr("href", "todos/"+todo._id);
+					var $todoRemoveLink = $("<a>").attr("href", "todos/"+todo._id);
+					$todoRemoveLink.text("-remove");
+					
+					$todoRemoveLink.on("click", function() {
+						$.ajax({
+							url: "todos/" + todo._id,
+							type: "DELETE",
+							success: function(result) {
+								console.log("Delete request");
+							}
+						}).done(function() {
+							// Remove DOM element.
+							console.log("remove dom element");
+						});
+						// return false so link is not followed.
+						return false;
+					});
+					
+					$todoListItem.append($todoRemoveLink);
+					$content.append($todoListItem);
 				});
 				callback(null, $content);
 			}).fail(function(jqXHR, textStatus, error) {
