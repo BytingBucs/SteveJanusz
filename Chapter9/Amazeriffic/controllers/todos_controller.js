@@ -87,6 +87,12 @@ ToDosController.show = function(req, res) {
 
 ToDosController.destroy = function(req, res) {
 	console.log("Destroy");
+	console.log(req.params.id);
+	
+	ToDo.remove({"_id": req.params.id});
+	
+	//Do the thing to destroy and then res.send 200.
+	res.send(200);
 }
 
 module.exports = ToDosController;
