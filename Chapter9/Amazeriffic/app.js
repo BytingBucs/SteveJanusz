@@ -20,6 +20,7 @@ app.get("/todos.json", ToDosController.index);
 // basic CRUD routes
 app.get("/todos/:id", ToDosController.show);
 app.post("/todos", ToDosController.create);
+app.del("/todos/:id", ToDosController.destroy);
 
 // user routes
 app.get("/users.json", usersController.index);

@@ -89,7 +89,13 @@ ToDosController.destroy = function(req, res) {
 	console.log("Destroy");
 	console.log(req.params.id);
 	
-	ToDo.remove({"_id": req.params.id});
+	ToDo.remove({"_id": req.params.id }, function(err, result) {
+		if(err) {
+			// Did not get deleted
+			console.log(err);
+			res.send(500);
+		}
+	});
 	
 	//Do the thing to destroy and then res.send 200.
 	res.send(200);

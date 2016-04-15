@@ -24,7 +24,7 @@ var main = function(toDoObjects) {
 					var $todoRemoveLink = $("<a>").attr("href", "todos/"+todo._id);
 					$todoRemoveLink.text("-remove");
 					
-					$todoRemoveLink.on("click", function() {
+					$todoRemoveLink.on("click", function(event) {
 						$.ajax({
 							url: "todos/" + todo._id,
 							type: "DELETE",
@@ -33,7 +33,7 @@ var main = function(toDoObjects) {
 							}
 						}).done(function() {
 							// Remove DOM element.
-							console.log("remove dom element");
+							console.log(event.target.parentNode.remove());
 						});
 						// return false so link is not followed.
 						return false;
