@@ -51,6 +51,7 @@ main .tabs {
 main .container div {
 	border: 2px solid black;
 	margin: 5px;
+	border-radius: 5px;
 }
 .tabs a span {
 	color: #000;
@@ -72,9 +73,6 @@ main .container div {
 	padding: 3px;
 	padding-left: 15px;
 }
-.tag {
-	border-radius: 5px;
-}
 .tag h3 {
 	color: #000;
 	font-weight: bold;
@@ -87,6 +85,22 @@ main .container div {
 	text-decoration: none;
 	font-weight: bold;
 	float: right;
+}
+.container .addBox {
+	padding: 15px;
+}
+.container .addBox span {
+	display: inline-block;
+	text-align: right;
+	width: 75px;
+	padding-right: 15px;
+	margin-bottom: 5px;
+}
+.container .addBox input {
+	width: 155px;
+}
+.container .addBox button {
+	width: 250px;
 }
 footer {
 	height: 200px;

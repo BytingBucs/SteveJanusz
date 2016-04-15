@@ -106,7 +106,7 @@ var main = function(toDoObjects) {
 	tabs.push({
 		"name": 	"Add",
 		"content":	function(callback) {
-			var $content = $("<div>");
+			var $content = $("<div>").addClass("addBox");
 			
 			var $inputLabel = $("<span>").text("Description: ");
 			var $input = $("<input>").addClass("description");
