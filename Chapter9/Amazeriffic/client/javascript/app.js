@@ -21,23 +21,9 @@ var main = function(toDoObjects) {
 				toDoObjects.slice().reverse().forEach(function(todo) {
 					var $todoListItem = $("<li>").text(todo.description);
 					var $todoRemoveLink = $("<a>").attr("href", "todos/"+todo._id);
-					var $todoRemoveLink = $("<a>").attr("href", "todos/"+todo._id);
-					$todoRemoveLink.text("-remove");
+					$todoRemoveLink.text("X");
 					
-					$todoRemoveLink.on("click", function(event) {
-						$.ajax({
-							url: "todos/" + todo._id,
-							type: "DELETE",
-							success: function(result) {
-								console.log("Delete request");
-							}
-						}).done(function() {
-							// Remove DOM element.
-							console.log(event.target.parentNode.remove());
-						});
-						// return false so link is not followed.
-						return false;
-					});
+					$todoRemoveLink.on("click", removeClick);
 					
 					$todoListItem.append($todoRemoveLink);
 					$content.append($todoListItem);
@@ -56,8 +42,15 @@ var main = function(toDoObjects) {
 		"content":	function(callback) {
 			$.get("todos.json", function(toDoObjects) {
 				var $content = $("<ul>");
-				toDos.forEach(function(todo) {
-					$content.append($("<li>").text(todo));
+				toDoObjects.forEach(function(todo) {
+					var $todoListItem = $("<li>").text(todo.description);
+					var $todoRemoveLink = $("<a>").attr("href", "todos/"+todo._id);
+					$todoRemoveLink.text("X");
+					
+					$todoRemoveLink.on("click", removeClick);
+					
+					$todoListItem.append($todoRemoveLink);
+					$content.append($todoListItem);
 				});
 				callback(null, $content);
 			}).fail(function(jqXHR, textStatus, error) {
@@ -78,13 +71,21 @@ var main = function(toDoObjects) {
 				var $elements = [];
 				
 				organizedByTag.forEach(function(tag) {
-					var $holder = $("<div>");
+					var $holder = $("<div>").addClass("tag");
 					var $tagName = $("<h3>").text(tag.name);
 					var $content = $("<ul>");
+					
+					console.log(tag);
 						
-					tag.toDos.forEach(function(description) {
-						var $li = $("<li>").text(description);
-						$content.append($li);
+					tag.toDos.forEach(function(todo) {
+						var $todoListItem = $("<li>").text(todo.description);
+						var $todoRemoveLink = $("<a>").attr("href", "todos/"+todo._id);
+						$todoRemoveLink.text("X");
+						
+						$todoRemoveLink.on("click", removeClick);
+						
+						$todoListItem.append($todoRemoveLink);
+						$content.append($todoListItem);
 					});
 					
 					$holder.append($tagName);
@@ -234,7 +235,7 @@ var organizeByTag = function(toDoObjects) {
 			//console.log(toDo.tags.indexOf(tag));
 			//console.log("-----");
 			if(toDo.tags.indexOf(tag) !== -1) {
-				toDosWithTag.push(toDo.description);
+				toDosWithTag.push(toDo);
 			}
 		});
 		
@@ -243,6 +244,21 @@ var organizeByTag = function(toDoObjects) {
 
 	return tagObjects;
 };
+
+var removeClick = function(event) {
+	$.ajax({
+		url: "todos/" + event.target.pathname.split("/").slice(-1)[0],
+		type: "DELETE",
+		success: function(result) {
+			console.log("Delete request");
+		}
+	}).done(function() {
+		// Remove DOM element.
+		console.log(event.target.parentNode.remove());
+	});
+	// return false so link is not followed.
+	return false;
+}
 
 $(document).ready(function() {
 	$.getJSON("todos.json", function(toDoObjects) {

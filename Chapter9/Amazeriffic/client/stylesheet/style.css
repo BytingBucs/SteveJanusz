@@ -9,10 +9,6 @@ h5 {
 p {
 	line-height: 36px;
 }
-li:before {
-	text-indent: 8px;
-	content: "\2022";
-}
 .right {
 	text-align: right;
 	margin-right: 100px;
@@ -57,6 +53,7 @@ main .container div {
 	margin: 5px;
 }
 .tabs a span {
+	color: #000;
 	display: inline-block;
 	border-radius: 5px 5px 0 0;
 	width: 100px;
@@ -67,6 +64,29 @@ main .container div {
 }
 .tabs a span.active {
 	background: #eee;
+}
+.container ul li {
+	background: #ccc;
+	border-radius: 5px;
+	margin: 3px;
+	padding: 3px;
+	padding-left: 15px;
+}
+.tag {
+	border-radius: 5px;
+}
+.tag h3 {
+	color: #000;
+	font-weight: bold;
+	font-size: 150%;
+	margin: 3px;
+	margin-left: 10px;
+}
+.container ul li a {
+	color: #000;
+	text-decoration: none;
+	font-weight: bold;
+	float: right;
 }
 footer {
 	height: 200px;
