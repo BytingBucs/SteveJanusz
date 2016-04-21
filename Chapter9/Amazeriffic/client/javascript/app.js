@@ -195,6 +195,8 @@ var main = function(toDoObjects) {
 			
 			$("main .description").val("");
 			$("main .tags").val("");
+			
+			$(".tabs a:first-child span").trigger("click");
 		}
 	};
 	
