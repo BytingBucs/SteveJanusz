@@ -71,11 +71,10 @@ var main = function(toDoObjects) {
 				var $elements = [];
 				
 				organizedByTag.forEach(function(tag) {
-					var $holder = $("<div>").addClass("tag");
 					var $tagName = $("<h3>").text(tag.name);
 					var $content = $("<ul>");
-					
-					console.log(tag);
+
+					$content.append($tagName);
 						
 					tag.toDos.forEach(function(todo) {
 						var $todoListItem = $("<li>").text(todo.description);
@@ -87,11 +86,8 @@ var main = function(toDoObjects) {
 						$todoListItem.append($todoRemoveLink);
 						$content.append($todoListItem);
 					});
-					
-					$holder.append($tagName);
-					$holder.append($content);
 
-					$elements.push($holder);
+					$elements.push($content);
 				});
 				callback(null, $elements);
 				
@@ -106,10 +102,10 @@ var main = function(toDoObjects) {
 	tabs.push({
 		"name": 	"Add",
 		"content":	function(callback) {
-			var $content = $("<div>").addClass("addBox");
+			var $content = [];//$("<div>").addClass("addBox");
 			
 			var $inputLabel = $("<span>").text("Description: ");
-			var $input = $("<input>").addClass("description");
+			var $input = $("<input>").addClass("descriptionInput");
 			$input.on("keypress", function(event) {
 				if(event.keyCode === 13) {
 					addItemToList();
@@ -117,7 +113,7 @@ var main = function(toDoObjects) {
 			});
 			
 			var $tagLabel = $("<span>").text("Tags: ");
-			var $tagInput = $("<input>").addClass("tags");
+			var $tagInput = $("<input>").addClass("tagsInputs");
 			$input.on("keypress", function(event) {
 				if(event.keyCode === 13) {
 					addItemToList();
@@ -129,15 +125,16 @@ var main = function(toDoObjects) {
 				addItemToList();
 			});
 			
-			$content.append($inputLabel);
-			$content.append($input);
-			$content.append($("<br>"));
+			$content.push($inputLabel);
+			$content.push($input);
+			$content.push($("<br>"));
 			
-			$content.append($tagLabel);
-			$content.append($tagInput);
-			$content.append($("<br>"));
+			$content.push($tagLabel);
+			$content.push($tagInput);
+			$content.push($("<br>"));
 			
-			$content.append($button);
+			$content.push($button);
+			console.log($content);
 			callback(null, $content);
 			
 		}
@@ -155,7 +152,7 @@ var main = function(toDoObjects) {
 			
 			$(".tabs a span").removeClass("active");
 			$spanElement.addClass("active");
-			$("main .container").empty();
+			$("main .container .content").empty();
 			
 			//get the content from the tab's content function
 			tab.content(function(err, $content) {
@@ -163,13 +160,14 @@ var main = function(toDoObjects) {
 					console.log("An error occured with your request");
 					console.log(err);
 				} else {
-					$("main .container").append($content);
+					// .html instead of .append so I can pack $content in a div.
+					$("main .container .content").append($content);
 				}
 			});
 
 			return false;
 		});
-		$("main .tabs").append($aElement);
+		$("main .container .tabs").append($aElement);
 	});
 	
 	//END OF THE TABS SECTION
@@ -177,8 +175,8 @@ var main = function(toDoObjects) {
 	var addItemToList = function() {
 		//Do the calls to the values need to be more specific?
 		
-		var $description = $("main .description").val();
-		var $tags = $("main .tags").val().split(",");
+		var $description = $("main .container .content .descriptionInput").val();
+		var $tags = $("main .container. content .tagsInput").val().split(",");
 		var newToDo = {"description": $description, "tags": $tags}
 
 		if($description != "" && $tags != "") {
@@ -193,19 +191,17 @@ var main = function(toDoObjects) {
 				});
 			});		
 			
-			$("main .description").val("");
-			$("main .tags").val("");
-			
-			$(".tabs a:first-child span").trigger("click");
+			$("main .container .content .descriptionInput").val("");
+			$("main .container .content .tagsInput").val("");
 		}
 	};
-	
+	/* I do not think this is used any more.
 	$(".tabs a span").toArray().forEach(function(element) {
 		var $element = $(element);
 		$element.on("click", function() {
 			$(".tabs a span").removeClass("active");
 			$(element).addClass("active");
-			$("main .content").empty();
+			//$("main .container .content").empty();
 			
 			if($element.parent().is(":nth-child(2)")) {
 			} else if($element.parent().is(":nth-child(3)")) {				
@@ -215,7 +211,7 @@ var main = function(toDoObjects) {
 			return false;
 		});
 	});
-	
+	*/
 	$(".tabs a:first-child span").trigger("click");
 };
 
