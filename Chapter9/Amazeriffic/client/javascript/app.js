@@ -102,39 +102,62 @@ var main = function(toDoObjects) {
 	tabs.push({
 		"name": 	"Add",
 		"content":	function(callback) {
-			var $content = [];//$("<div>").addClass("addBox");
+			var $content = [];
 			
-			var $inputLabel = $("<span>").text("Description: ");
-			var $input = $("<input>").addClass("descriptionInput");
-			$input.on("keypress", function(event) {
+			//Original add field
+			var $descLabel = $("<span>").text("Description: ");
+			var $descInput = $("<input>").addClass("descriptionInput");
+			$descInput.on("keypress", function(event) {
 				if(event.keyCode === 13) {
 					addItemToList();
 				}
 			});
 			
 			var $tagLabel = $("<span>").text("Tags: ");
-			var $tagInput = $("<input>").addClass("tagsInputs");
-			$input.on("keypress", function(event) {
+			var $tagInput = $("<input>").addClass("tagsInput");
+			$tagInput.on("keypress", function(event) {
 				if(event.keyCode === 13) {
 					addItemToList();
 				}
 			});
 			
-			var $button = $("<button>").text("Add");
+			//Custom add field(s)
+			//Add button that adds a custom field line.
+			var $addField = $("<button>").text("Add Custom Field");
+			$addField.on("click", function(event) {
+				//Add 2 labels, 2 buttons?
+				var $custNameLabel = $("<span>").text("Field: ");
+				var $custNameInput = $("<input>").addClass("custNameInput");
+				
+				var $custValueLabel = $("<span>").text("Value: ");
+				var $custValueInput = $("<input>").addClass("custValueInput");
+				
+				$(".submitButton").before($custNameLabel);
+				$(".submitButton").before($custNameInput);
+				$(".submitButton").before($("<br>"));
+				$(".submitButton").before($custValueLabel);
+				$(".submitButton").before($custValueInput);
+				$(".submitButton").before($("<br>"));
+			});
+			
+			var $button = $("<button>").text("Submit");
+			$button.addClass("submitButton");
 			$button.on("click", function() {
 				addItemToList();
 			});
 			
-			$content.push($inputLabel);
-			$content.push($input);
+			$content.push($descLabel);
+			$content.push($descInput);
 			$content.push($("<br>"));
 			
 			$content.push($tagLabel);
 			$content.push($tagInput);
 			$content.push($("<br>"));
 			
+			$content.push($addField);
+			$content.push($("<br>"));
 			$content.push($button);
-			console.log($content);
+			
 			callback(null, $content);
 			
 		}
@@ -160,7 +183,6 @@ var main = function(toDoObjects) {
 					console.log("An error occured with your request");
 					console.log(err);
 				} else {
-					// .html instead of .append so I can pack $content in a div.
 					$("main .container .content").append($content);
 				}
 			});
@@ -172,47 +194,30 @@ var main = function(toDoObjects) {
 	
 	//END OF THE TABS SECTION
 	
-	var addItemToList = function() {
-		//Do the calls to the values need to be more specific?
-		
+	var addItemToList = function() 
 		var $description = $("main .container .content .descriptionInput").val();
-		var $tags = $("main .container. content .tagsInput").val().split(",");
+		var $tags = $("main .container .content .tagsInput").val().split(",");
 		var newToDo = {"description": $description, "tags": $tags}
 
 		if($description != "" && $tags != "") {
 
 			$.post("todos", newToDo, function(response) {
-				console.log(response);
-
 				toDoObjects.push(newToDo);
 	
 				toDos = toDoObjects.map(function(toDo) {
 					return toDo.description;
 				});
+				
+				$("main .container .tabs a:first-child span").trigger("click");
 			});		
 			
 			$("main .container .content .descriptionInput").val("");
 			$("main .container .content .tagsInput").val("");
 		}
+	
 	};
-	/* I do not think this is used any more.
-	$(".tabs a span").toArray().forEach(function(element) {
-		var $element = $(element);
-		$element.on("click", function() {
-			$(".tabs a span").removeClass("active");
-			$(element).addClass("active");
-			//$("main .container .content").empty();
-			
-			if($element.parent().is(":nth-child(2)")) {
-			} else if($element.parent().is(":nth-child(3)")) {				
-			} else if($element.parent().is(":nth-child(4)")) {			
-			}
-			
-			return false;
-		});
-	});
-	*/
-	$(".tabs a:first-child span").trigger("click");
+	
+	$("main .container .tabs a:first-child span").trigger("click");
 };
 
 var organizeByTag = function(toDoObjects) {
