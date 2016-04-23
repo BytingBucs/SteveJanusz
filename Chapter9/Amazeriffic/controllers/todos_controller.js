@@ -37,8 +37,30 @@ ToDosController.index = function(req, res) {
 ToDosController.create = function(req, res) {
 	var username = req.params.username || null;
 	
-	var newToDo = new ToDo({	"description": 	req.body.description,
-								"tags":			req.body.tags});
+	var $desc = req.body.description;
+	var $tags = req.body.tags;
+	//Remove these so we can foreach through the body.
+	delete req.body.description;
+	delete req.body.tags;
+	
+	//Array of custom tags
+	var $customTags = [];
+	
+	var keys = Object.keys(req.body);
+	for(var i = 0; i < keys.length; i++) {
+		var key = keys[i];
+		$customTags.push({ "key": key, "value": req.body[key] });
+	}
+	
+	console.log($desc);
+	console.log($tags);
+	console.log($customTags);
+	
+	var newToDo = new ToDo({	"description": 	$desc,
+								"tags":			$tags,
+								"custom":       $customTags});
+
+	console.log(JSON.stringify(newToDo));
 	
 	User.find({"username": username}, function(err, result) {
 		if(err) {
@@ -51,8 +73,6 @@ ToDosController.create = function(req, res) {
 				//User found
 				newToDo.owner = result[0]._id;
 			}
-			
-			console.log(newToDo.owner);
 			
 			newToDo.save(function(err, result) {
 				if(err !== null) {

@@ -16,6 +16,7 @@ var main = function(toDoObjects) {
 		"name": 	"Newest",
 		"content":	function(callback) {
 			$.get("todos.json", function(toDoObjects) {
+				console.log(toDoObjects);
 				var $content = $("<ul>");
 				//Slice is needed so we do not modify the original array.
 				toDoObjects.slice().reverse().forEach(function(todo) {
@@ -194,11 +195,29 @@ var main = function(toDoObjects) {
 	
 	//END OF THE TABS SECTION
 	
-	var addItemToList = function() 
+	var addItemToList = function() {
 		var $description = $("main .container .content .descriptionInput").val();
 		var $tags = $("main .container .content .tagsInput").val().split(",");
+		
 		var newToDo = {"description": $description, "tags": $tags}
-
+		//Add custom fields to 'newToDo'
+		var $custNames = [];
+		var $custValues = [];
+		
+		var i = 0;
+		while(true) {
+			var $fieldName = $("main .container .content .custNameInput:eq(" + i + ")").val();
+			var $fieldValue = $("main .container .content .custValueInput:eq(" + i + ")").val();
+			
+			if(!($fieldName || $fieldValue)) {
+				break;
+			}
+			
+			newToDo[$fieldName] = $fieldValue;
+			
+			i+=1;
+		}
+		
 		if($description != "" && $tags != "") {
 
 			$.post("todos", newToDo, function(response) {
