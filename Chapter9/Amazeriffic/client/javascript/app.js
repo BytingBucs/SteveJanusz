@@ -15,8 +15,8 @@ var main = function(toDoObjects) {
 	tabs.push({
 		"name": 	"Newest",
 		"content":	function(callback) {
-			$.get("todos.json", function(toDoObjects) {
-				console.log(toDoObjects);
+			$.get("todos.json", function(newToDoObjects) {
+				toDoObjects = newToDoObjects;
 				var $content = $("<ul>");
 				//Slice is needed so we do not modify the original array.
 				toDoObjects.slice().reverse().forEach(function(todo) {
@@ -41,7 +41,8 @@ var main = function(toDoObjects) {
 	tabs.push({
 		"name": 	"Oldest",
 		"content":	function(callback) {
-			$.get("todos.json", function(toDoObjects) {
+			$.get("todos.json", function(newToDoObjects) {
+				toDoObjects = newToDoObjects;
 				var $content = $("<ul>");
 				toDoObjects.forEach(function(todo) {
 					var $todoListItem = $("<li>").text(todo.description);
@@ -65,7 +66,8 @@ var main = function(toDoObjects) {
 	tabs.push({
 		"name": 	"Tags",
 		"content":	function(callback) {
-			$.get("todos.json", function(toDoObjects) {
+			$.get("todos.json", function(newToDoObjects) {
+				toDoObjects = newToDoObjects;
 				var organizedByTag = organizeByTag(toDoObjects);
 				//console.log(organizedByTag);
 				
@@ -90,6 +92,42 @@ var main = function(toDoObjects) {
 
 					$elements.push($content);
 				});
+				callback(null, $elements);
+				
+			}).fail(function(jqXHR, textStatus, error) {
+				//Send error and null to callback.
+				callback(error, null);
+			});
+		}
+	});
+	
+	//Custom Fields? Search? Tab
+	tabs.push({
+		"name": 	"Search",
+		"content":	function(callback) {
+			$.get("todos.json", function(newToDoObjects) {
+				toDoObjects = newToDoObjects;
+				var $elements = [];
+				
+				var $searchKeyLabel = $("<span>").text("Search Field: ");
+				var $searchKeyInput = $("<input>").addClass("searchKeyInput");
+				
+				var $searchValueLabel = $("<span>").text("Search Value: ");
+				var $searchValueInput = $("<input>").addClass("searchValueInput");
+				
+				var $searchButton = $("<button>").text("Search");
+				$searchButton.on("click", function(event) {
+					searchForTags();
+				});
+				
+				$elements.push($searchKeyLabel);
+				$elements.push($searchKeyInput);
+				$elements.push($("<br>"));
+				$elements.push($searchValueLabel);
+				$elements.push($searchValueInput);
+				$elements.push($("<br>"));
+				$elements.push($searchButton);
+				
 				callback(null, $elements);
 				
 			}).fail(function(jqXHR, textStatus, error) {
@@ -221,7 +259,8 @@ var main = function(toDoObjects) {
 		if($description != "" && $tags != "") {
 
 			$.post("todos", newToDo, function(response) {
-				toDoObjects.push(newToDo);
+				//AJAX updates this now.
+				//toDoObjects.push(newToDo);
 	
 				toDos = toDoObjects.map(function(toDo) {
 					return toDo.description;
@@ -234,6 +273,44 @@ var main = function(toDoObjects) {
 			$("main .container .content .tagsInput").val("");
 		}
 	
+	};
+	
+	var searchForTags = function() {
+		var $searchKey = $("main .container .content .searchKeyInput").val();
+		var $searchValue = $("main .container .content .searchValueInput").val();
+		
+		var searchToDos = [];
+		
+		//For each todo
+		for(var i = 0; i < toDoObjects.length; i++) {
+			
+			//For each custom tag
+			for(var j = 0; j < toDoObjects[i]["custom"].length; j++) {
+			
+				if($searchKey == toDoObjects[i]["custom"][j]["key"] && toDoObjects[i]["custom"][j]["value"].indexOf($searchValue) !== -1) {
+					searchToDos.push(toDoObjects[i]);
+					break;
+				}
+			}
+		};
+		
+		//Set content to 'searchToDos'
+		var $elements = [];
+		
+		var $content = $("<ul>");
+		searchToDos.forEach(function(todo) {
+			var $todoListItem = $("<li>").text(todo.description);
+			var $todoRemoveLink = $("<a>").attr("href", "todos/"+todo._id);
+			$todoRemoveLink.text("X");
+			
+			$todoRemoveLink.on("click", removeClick);
+			
+			$todoListItem.append($todoRemoveLink);
+			$content.append($todoListItem);
+		});
+		
+		$("main .container .content").html($content);
+		
 	};
 	
 	$("main .container .tabs a:first-child span").trigger("click");
@@ -253,9 +330,6 @@ var organizeByTag = function(toDoObjects) {
 	var tagObjects = tags.map(function(tag) {
 		var toDosWithTag = [];
 		toDoObjects.forEach(function(toDo) {
-			//console.log(toDo.tags);
-			//console.log(toDo.tags.indexOf(tag));
-			//console.log("-----");
 			if(toDo.tags.indexOf(tag) !== -1) {
 				toDosWithTag.push(toDo);
 			}

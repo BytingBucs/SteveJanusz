@@ -59,8 +59,6 @@ ToDosController.create = function(req, res) {
 	var newToDo = new ToDo({	"description": 	$desc,
 								"tags":			$tags,
 								"custom":       $customTags});
-
-	console.log(JSON.stringify(newToDo));
 	
 	User.find({"username": username}, function(err, result) {
 		if(err) {
