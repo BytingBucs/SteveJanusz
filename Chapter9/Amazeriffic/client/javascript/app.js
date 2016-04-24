@@ -69,7 +69,6 @@ var main = function(toDoObjects) {
 			$.get("todos.json", function(newToDoObjects) {
 				toDoObjects = newToDoObjects;
 				var organizedByTag = organizeByTag(toDoObjects);
-				//console.log(organizedByTag);
 				
 				var $elements = [];
 				
@@ -109,24 +108,42 @@ var main = function(toDoObjects) {
 				toDoObjects = newToDoObjects;
 				var $elements = [];
 				
-				var $searchKeyLabel = $("<span>").text("Search Field: ");
-				var $searchKeyInput = $("<input>").addClass("searchKeyInput");
+				//var $searchKeyLabel = $("<span>").text("Search Field: ");
+				//var $searchKeyInput = $("<input>").addClass("searchKeyInput");
 				
-				var $searchValueLabel = $("<span>").text("Search Value: ");
-				var $searchValueInput = $("<input>").addClass("searchValueInput");
+				//var $searchValueLabel = $("<span>").text("Search Value: ");
+				//var $searchValueInput = $("<input>").addClass("searchValueInput");
 				
-				var $searchButton = $("<button>").text("Search");
-				$searchButton.on("click", function(event) {
-					searchForTags();
+				//var $searchButton = $("<button>").text("Search");
+				//$searchButton.on("click", function(event) {
+				//	searchForTags();
+				//});
+				
+				//$elements.push($searchKeyLabel);
+				//$elements.push($searchKeyInput);
+				//$elements.push($("<br>"));
+				//$elements.push($searchValueLabel);
+				//$elements.push($searchValueInput);
+				//$elements.push($("<br>"));
+				//$elements.push($searchButton);
+				//$elements.push($("<br>"))
+				//$elements.push($("<br>"))
+				
+				var $fieldList = $("<ul>");
+				$fieldList.append($("<h3>").text("Click Field to Sort"));
+				
+				getFieldList(toDoObjects).forEach(function(field) {
+					var $fieldItem = $("<li>").text(field);
+					$fieldItem.css("cursor", "pointer");
+					
+					$fieldItem.on("click", function(event) {
+						//textContent for FireFox, innerText for others
+						searchForTags(event.target.innerText || event.target.textContent);
+					});
+					
+					$fieldList.append($fieldItem);
 				});
-				
-				$elements.push($searchKeyLabel);
-				$elements.push($searchKeyInput);
-				$elements.push($("<br>"));
-				$elements.push($searchValueLabel);
-				$elements.push($searchValueInput);
-				$elements.push($("<br>"));
-				$elements.push($searchButton);
+				$elements.push($fieldList);
 				
 				callback(null, $elements);
 				
@@ -275,9 +292,9 @@ var main = function(toDoObjects) {
 	
 	};
 	
-	var searchForTags = function() {
-		var $searchKey = $("main .container .content .searchKeyInput").val();
-		var $searchValue = $("main .container .content .searchValueInput").val();
+	var searchForTags = function($searchKey) {
+		//var $searchKey = $("main .container .content .searchKeyInput").val();
+		//var $searchValue = $("main .container .content .searchValueInput").val();
 		
 		var searchToDos = [];
 		
@@ -286,8 +303,9 @@ var main = function(toDoObjects) {
 			
 			//For each custom tag
 			for(var j = 0; j < toDoObjects[i]["custom"].length; j++) {
-			
-				if($searchKey == toDoObjects[i]["custom"][j]["key"] && toDoObjects[i]["custom"][j]["value"].indexOf($searchValue) !== -1) {
+				
+				//Bypass second -- testing custom tags a new way.
+				if($searchKey == toDoObjects[i]["custom"][j]["key"]) {// && toDoObjects[i]["custom"][j]["value"].indexOf($searchValue) !== -1) {
 					searchToDos.push(toDoObjects[i]);
 					break;
 				}
@@ -295,21 +313,30 @@ var main = function(toDoObjects) {
 		};
 		
 		//Set content to 'searchToDos'
+		var organizedByTag = organizeByCustomTag(searchToDos, $searchKey);
 		var $elements = [];
-		
-		var $content = $("<ul>");
-		searchToDos.forEach(function(todo) {
-			var $todoListItem = $("<li>").text(todo.description);
-			var $todoRemoveLink = $("<a>").attr("href", "todos/"+todo._id);
-			$todoRemoveLink.text("X");
-			
-			$todoRemoveLink.on("click", removeClick);
-			
-			$todoListItem.append($todoRemoveLink);
-			$content.append($todoListItem);
+				
+		organizedByTag.forEach(function(tag) {
+			var $tagName = $("<h3>").text(tag.name);
+			var $content = $("<ul>");
+
+			$content.append($tagName);
+				
+			tag.toDos.forEach(function(todo) {
+				var $todoListItem = $("<li>").text(todo.description);
+				var $todoRemoveLink = $("<a>").attr("href", "todos/"+todo._id);
+				$todoRemoveLink.text("X");
+				
+				$todoRemoveLink.on("click", removeClick);
+				
+				$todoListItem.append($todoRemoveLink);
+				$content.append($todoListItem);
+			});
+
+			$elements.push($content);
 		});
 		
-		$("main .container .content").html($content);
+		$("main .container .content").html($elements);
 		
 	};
 	
@@ -339,6 +366,48 @@ var organizeByTag = function(toDoObjects) {
 	});
 
 	return tagObjects;
+};
+
+var organizeByCustomTag = function(toDoObjects, searchKey) {
+	var tags = [];
+
+	toDoObjects.forEach(function(toDo) {
+		toDo.custom.forEach(function(tag) {
+			if(tag["key"] == searchKey && tags.indexOf(tag["value"]) === -1) {
+				tags.push(tag["value"]);
+			}
+		});
+	});
+	
+	var tagObjects = tags.map(function(tag) {
+		var toDosWithTag = [];
+		toDoObjects.forEach(function(toDo) {
+			toDo.custom.forEach(function(itemTags) {
+				if(itemTags["value"] == tag) {
+					toDosWithTag.push(toDo);
+				}
+			})
+		});
+		
+		return {"name": tag, "toDos": toDosWithTag};
+	});
+
+	console.log(tagObjects);
+	return tagObjects;
+};
+
+var getFieldList = function(toDoObjects) {
+	var tags = [];
+	
+	toDoObjects.forEach(function(toDo) {
+		toDo.custom.forEach(function(tag) {
+			if(tags.indexOf(tag["key"]) === -1) {
+				tags.push(tag["key"]);
+			}
+		});
+	});
+	
+	return tags;
 };
 
 var removeClick = function(event) {
