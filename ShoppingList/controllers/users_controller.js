@@ -39,8 +39,16 @@ UsersController.show = function(req, res) {
 			//User found.
 			res.sendfile("./client/index.html");
 		} else {
+			var exampleUser = new User({"username":req.params.username});
+		exampleUser.save(function (err, result) {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log("Saved Example User");
+			}
+		});
 			//User not found.
-			res.send(404);
+			res.sendfile("./client/index.html");
 		}
 	});
 };
