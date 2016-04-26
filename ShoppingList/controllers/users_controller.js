@@ -39,12 +39,19 @@ UsersController.show = function(req, res) {
 			//User found.
 			res.sendfile("./client/index.html");
 		} else {
-			var exampleUser = new User({"username":req.params.username});
-		exampleUser.save(function (err, result) {
-			if (err) {
-				console.log(err);
-			} else {
-				console.log("Saved Example User");
+			//Carmen created new user on 4.26.16
+		var userValidation = /^[a-zA-Z0-9]+$/;//allow letters,numbers, and underscores
+			if(!userValidation.test(req.params.username)) {
+				res.send(404);
+				return;
+			}
+		
+			var newUser = new User({"username":req.params.username}); 
+			newUser.save(function (err, result) {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log("Create New User");
 			}
 		});
 			//User not found.
