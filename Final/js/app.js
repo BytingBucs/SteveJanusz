@@ -28,14 +28,24 @@ var createTables = function() {
 		
 		var relatedIssue = "null";
 		if($issues[issue.RelatedIssue]) {
-			relatedIssue = $issues[issue.RelatedIssue]["Title"];
+			relatedIssue = $issues[issue.RelatedIssue-1]["Title"];
+		}
+		
+		var assignedTo = "null";
+		if($contacts[issue.AssignedTo-1]) {
+			assignedTo = $contacts[issue.AssignedTo-1]["Company"]
+		}
+		
+		var openedBy = "null";
+		if($contacts[issue.OpenedBy-1]) {
+			openedBy = $contacts[issue.OpenedBy-1]["Company"]
 		}
 		
 		$issueRows+="<tr><td>"+
 		issue.ID+"</td><td>" +
 		issue.Title+"</td><td>" +
-		$contacts[issue.AssignedTo]["Company"]+"</td><td>" +
-		$contacts[issue.OpenedBy]["Company"]+"</td><td>" +
+		assignedTo+"</td><td>" +
+		openedBy+"</td><td>" +
 		issue.OpenedDate+"</td><td>" +
 		issue.Status+"</td><td>" +
 		issue.Category+"</td><td>" +
