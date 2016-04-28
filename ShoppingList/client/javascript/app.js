@@ -161,7 +161,7 @@ var main = function(toDoObjects) {
 			var $content = [];
 			
 			//Original add field
-			var $descLabel = $("<span>").text("Description: ");
+			var $descLabel = $("<span>").text("Description");
 			var $descInput = $("<input>").addClass("descriptionInput");
 			$descInput.on("keypress", function(event) {
 				if(event.keyCode === 13) {
@@ -169,7 +169,7 @@ var main = function(toDoObjects) {
 				}
 			});
 			
-			var $tagLabel = $("<span>").text("Tags: ");
+			var $tagLabel = $("<span>").text("Tags");
 			var $tagInput = $("<input>").addClass("tagsInput");
 			$tagInput.on("keypress", function(event) {
 				if(event.keyCode === 13) {

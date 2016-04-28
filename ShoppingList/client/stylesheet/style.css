@@ -52,7 +52,7 @@ a {
 
 main {
     background: #fff;
-    border-radius: 0 5px 5px 5px;;
+    border-radius: 0 5px 5px 5px;
     padding: 40px;
 }
 
@@ -99,12 +99,16 @@ main .content li a {
     float: right;
 }
 main .content span {
+  display: inline-block;
+  width: 125px;
+  text-align: right;
   font-weight: bold;
   padding: 0 3px 0 3px;
   border-radius: 5px;
   background: #ccc;
   cursor: pointer;
   margin-left: 5px;
+  margin-right: 10px;
   font-size: 1.3em;
 }
 
