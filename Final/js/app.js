@@ -3,14 +3,19 @@ var main = function () {
  
      var url = "http://jimbarrell.com/fsw/getJSON.php?table=Issues";
      $.getJSON(url, function (Issues) {
-		$issues = Issues;
+		Issues.forEach(function(issue) {
+			$issues[issue.ID] = issue;
+		});
+		
 		createTables();
      });
  
      url = "http://jimbarrell.com/fsw/getJSON.php?table=Contacts";
 
      $.getJSON(url, function (Contacts) {
-		$contacts = Contacts;
+		Contacts.forEach(function(contact) {
+			$contacts[contact.ID] = contact;
+		});
 		createTables();
      });
     
@@ -24,21 +29,23 @@ var createTables = function() {
 	}
 	
 	var $issueRows=$("");
-	$issues.forEach(function (issue) {
+	Object.keys($issues).forEach(function (issue) {
+		
+		issue = $issues[issue];
 		
 		var relatedIssue = "null";
 		if($issues[issue.RelatedIssue]) {
-			relatedIssue = $issues[issue.RelatedIssue-1]["Title"];
+			relatedIssue = $issues[issue.RelatedIssue]["Title"];
 		}
 		
 		var assignedTo = "null";
-		if($contacts[issue.AssignedTo-1]) {
-			assignedTo = $contacts[issue.AssignedTo-1]["Company"]
+		if($contacts[issue.AssignedTo]) {
+			assignedTo = $contacts[issue.AssignedTo]["Company"]
 		}
 		
 		var openedBy = "null";
-		if($contacts[issue.OpenedBy-1]) {
-			openedBy = $contacts[issue.OpenedBy-1]["Company"]
+		if($contacts[issue.OpenedBy]) {
+			openedBy = $contacts[issue.OpenedBy]["Company"]
 		}
 		
 		$issueRows+="<tr><td>"+
@@ -53,12 +60,12 @@ var createTables = function() {
 		issue.Description+"</td><td>" +
 		issue.DueDate+"</td><td>" +
 		relatedIssue+"</td></tr>";
-		//$list.append($contact);
 	});
 	$("#tblIssues tbody").append($issueRows);
 	
 	var $rows=$("");
-	$contacts.forEach(function (contact) {
+	Object.keys($contacts).forEach(function (contact) {
+		contact = $contacts[contact];
 		$rows+="<tr><td>"+
 		contact.ID+"</td><td>" +
 		contact.Company+"</td><td>" +
@@ -67,15 +74,12 @@ var createTables = function() {
 		contact.EmailAddress+"</td><td>" +
 		contact.JobTitle+"</td><td>" +
 		contact.BusinessPhone+"</td></tr>";
-		//"</tr><td>&nbsp;</td>";
-		//contact.BusinessPhone+"</td></tr><td>&nbsp;</td>";
-		//$list.append($contact);
 	});
 	$("#tblContacts tbody").append($rows);
 }
 
-var $contacts;
-var $issues;
+var $contacts = {};
+var $issues = {};
 var first = 1;
  
 $(document).ready(main);
