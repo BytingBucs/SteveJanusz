@@ -161,7 +161,7 @@ var main = function(toDoObjects) {
 			var $content = [];
 			
 			//Original add field
-			var $descLabel = $("<span>").text("Description: ");
+			var $descLabel = $("<span>").text("Item");
 			var $descInput = $("<input>").addClass("descriptionInput");
 			$descInput.on("keypress", function(event) {
 				if(event.keyCode === 13) {
@@ -169,7 +169,7 @@ var main = function(toDoObjects) {
 				}
 			});
 			
-			var $tagLabel = $("<span>").text("Tags: ");
+			var $tagLabel = $("<span>").text("Tags");
 			var $tagInput = $("<input>").addClass("tagsInput");
 			$tagInput.on("keypress", function(event) {
 				if(event.keyCode === 13) {
@@ -182,12 +182,16 @@ var main = function(toDoObjects) {
 			var $addField = $("<button>").text("Add Custom Field");
 			$addField.on("click", function(event) {
 				//Add 2 labels, 2 buttons?
-				var $custNameLabel = $("<span>").text("Field: ");
+				var $custNameLabel = $("<span>").text("Field");
 				var $custNameInput = $("<input>").addClass("custNameInput");
 				
-				var $custValueLabel = $("<span>").text("Value: ");
+				var $custValueLabel = $("<span>").text("Value");
 				var $custValueInput = $("<input>").addClass("custValueInput");
 				
+				//Add an extra <br> if it is not the first fields added.
+				if(document.getElementsByClassName("custValueInput").length >= 1) {	
+					$(".submitButton").before($("<br>"));
+				}
 				$(".submitButton").before($custNameLabel);
 				$(".submitButton").before($custNameInput);
 				$(".submitButton").before($("<br>"));
