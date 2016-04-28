@@ -25,18 +25,24 @@ var createTables = function() {
 	
 	var $issueRows=$("");
 	$issues.forEach(function (issue) {
+		
+		var relatedIssue = "null";
+		if($issues[issue.RelatedIssue]) {
+			relatedIssue = $issues[issue.RelatedIssue]["Title"];
+		}
+		
 		$issueRows+="<tr><td>"+
 		issue.ID+"</td><td>" +
 		issue.Title+"</td><td>" +
-		issue.AssignedTo+"</td><td>" +
-		issue.OpenedBy+"</td><td>" +
+		$contacts[issue.AssignedTo]["Company"]+"</td><td>" +
+		$contacts[issue.OpenedBy]["Company"]+"</td><td>" +
 		issue.OpenedDate+"</td><td>" +
 		issue.Status+"</td><td>" +
 		issue.Category+"</td><td>" +
 		issue.Priority+"</td><td>" +
 		issue.Description+"</td><td>" +
-		issue.DueDate+"</td><td>" +           
-		issue.RelatedIssue+"</td></tr>";
+		issue.DueDate+"</td><td>" +
+		relatedIssue+"</td></tr>";
 		//$list.append($contact);
 	});
 	$("#tblIssues tbody").append($issueRows);
