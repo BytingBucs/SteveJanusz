@@ -188,6 +188,10 @@ var main = function(toDoObjects) {
 				var $custValueLabel = $("<span>").text("Value: ");
 				var $custValueInput = $("<input>").addClass("custValueInput");
 				
+				//Add an extra <br> if it is not the first fields added.
+				if(document.getElementsByClassName("custValueInput").length >= 1) {	
+					$(".submitButton").before($("<br>"));
+				}
 				$(".submitButton").before($custNameLabel);
 				$(".submitButton").before($custNameInput);
 				$(".submitButton").before($("<br>"));
