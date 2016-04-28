@@ -161,7 +161,7 @@ var main = function(toDoObjects) {
 			var $content = [];
 			
 			//Original add field
-			var $descLabel = $("<span>").text("Description");
+			var $descLabel = $("<span>").text("Item");
 			var $descInput = $("<input>").addClass("descriptionInput");
 			$descInput.on("keypress", function(event) {
 				if(event.keyCode === 13) {
@@ -182,10 +182,10 @@ var main = function(toDoObjects) {
 			var $addField = $("<button>").text("Add Custom Field");
 			$addField.on("click", function(event) {
 				//Add 2 labels, 2 buttons?
-				var $custNameLabel = $("<span>").text("Field: ");
+				var $custNameLabel = $("<span>").text("Field");
 				var $custNameInput = $("<input>").addClass("custNameInput");
 				
-				var $custValueLabel = $("<span>").text("Value: ");
+				var $custValueLabel = $("<span>").text("Value");
 				var $custValueInput = $("<input>").addClass("custValueInput");
 				
 				//Add an extra <br> if it is not the first fields added.

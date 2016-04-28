@@ -100,7 +100,7 @@ main .content li a {
 }
 main .content span {
   display: inline-block;
-  width: 125px;
+  width: 60px;
   text-align: right;
   font-weight: bold;
   padding: 0 3px 0 3px;
